@@ -1,6 +1,8 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import db from "../../config/database.config";
 
+import { Product } from "./Product";
+
 export interface UserAttributes {
   id: string;
   name: string;
@@ -10,9 +12,9 @@ export interface UserAttributes {
 }
 
 export interface UserInput extends Optional<UserAttributes, "id"> {};
-export class UserInstance extends Model<UserAttributes, UserInput> {};
+export class User extends Model<UserAttributes, UserInput> {};
 
-UserInstance.init(
+User.init(
   {
     id: {
       type: DataTypes.UUIDV4,
@@ -41,3 +43,6 @@ UserInstance.init(
     timestamps: false,
   }
 );
+
+User.belongsToMany(Product, { through: User });
+Product.belongsToMany(User, { through: Product });
