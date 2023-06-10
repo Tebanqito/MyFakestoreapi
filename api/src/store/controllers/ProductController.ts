@@ -1,24 +1,24 @@
 import { v4 as uuidv4 } from "uuid";
 import {
   ProductInput,
-  ProductInstance,
+  Product,
 } from "../models/Product";
 
 export const createProduct = async (
   product: ProductInput
-): Promise<ProductInstance> => {
+): Promise<Product> => {
   const id = uuidv4();
-  const createdProduct = await ProductInstance.create({ ...product, id });
+  const createdProduct = await Product.create({ ...product, id });
   return createdProduct;
 };
 
-export const getAllProducts = async (): Promise<ProductInstance[]> => {
-  const products = await ProductInstance.findAll();
+export const getAllProducts = async (): Promise<Product[]> => {
+  const products = await Product.findAll();
   return products;
 };
 
-export const getProductById = async (id: string): Promise<ProductInstance> => {
-  const product = await ProductInstance.findByPk(id);
+export const getProductById = async (id: string): Promise<Product> => {
+  const product = await Product.findByPk(id);
   if (!product)
     throw new Error(
       `No se encuentra ningun producto con el id ${id} en la base de datos.`
@@ -29,9 +29,9 @@ export const getProductById = async (id: string): Promise<ProductInstance> => {
 export const updateProductById = async (
   id: string,
   attributes: Partial<ProductInput>
-): Promise<ProductInstance> => {
-  await ProductInstance.update(attributes, { where: { id } });
-  const updatedProduct = await ProductInstance.findByPk(id);
+): Promise<Product> => {
+  await Product.update(attributes, { where: { id } });
+  const updatedProduct = await Product.findByPk(id);
   if (!updatedProduct)
     throw new Error(
       `No se encuentra ningun producto con el id ${id} en la base de datos.`
@@ -41,12 +41,12 @@ export const updateProductById = async (
 
 export const deleteProductById = async (
   id: string
-): Promise<ProductInstance> => {
-  const productToDelete = await ProductInstance.findByPk(id);
+): Promise<Product> => {
+  const productToDelete = await Product.findByPk(id);
   if (!productToDelete)
     throw new Error(
       `No se encuentra ningun producto con el id ${id} en la base de datos.`
     );
-  await ProductInstance.destroy({ where: { id } });
+  await Product.destroy({ where: { id } });
   return productToDelete;
 };
