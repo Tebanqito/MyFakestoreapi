@@ -17,9 +17,9 @@ export interface ProductAttributes {
 }
 
 export interface ProductInput extends Optional<ProductAttributes, "id"> {};
-export class ProductInstance extends Model<ProductAttributes, ProductInput> {};
+export class Product extends Model<ProductAttributes, ProductInput> {};
 
-ProductInstance.init(
+Product.init(
   {
     id: {
       type: DataTypes.UUIDV4,
