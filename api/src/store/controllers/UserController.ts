@@ -3,9 +3,15 @@ import {
   UserInput,
   User,
 } from "../models/User";
+import { Product } from "../models/Product";
 
 export const createUser = async (user: UserInput): Promise<User> => {
     const id = uuidv4();
     const createdUser = await User.create({ ...user, id });
     return createdUser;
+};
+
+export const getAllUsers = async (): Promise<User[]> => {
+    const users = await User.findAll({ include: [{ model: Product }] });
+    return users;
 };
