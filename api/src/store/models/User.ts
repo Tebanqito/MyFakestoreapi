@@ -44,5 +44,8 @@ User.init(
   }
 );
 
+User.hasMany(Product);
 User.belongsToMany(Product, { through: User });
+
+Product.hasMany(User);
 Product.belongsToMany(User, { through: Product });
