@@ -23,3 +23,9 @@ export const updateUserById = async (id: string, {...attibutes}: UserInput): Pro
   const user = await User.findByPk(id, { include: [Product] });
   return user;
 };
+
+export const deleteUserById = async (id: string): Promise<User | null> => {
+  const user = await User.findByPk(id, { include: [Product] });
+  await User.destroy({ where: { id: id } });
+  return user;
+};
