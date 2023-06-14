@@ -6,8 +6,6 @@ import {
   updateUserById,
   deleteUserById,
 } from "../controllers/UserController";
-import { UserAttributes } from "../models/User";
-import axios from "axios";
 
 const userRouter = Router();
 
