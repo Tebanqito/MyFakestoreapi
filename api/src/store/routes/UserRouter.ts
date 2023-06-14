@@ -55,4 +55,23 @@ userRouter.post("/", async (req: Request, res: Response) => {
   }
 });
 
+userRouter.put("/update/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const attributes = req.body;
+
+  try {
+    const user = await updateUserById(id, attributes);
+    if (!user)
+      throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      error: "error al actualizar un producto.",
+      route: "/update/:id",
+    });
+  }
+});
+
 export default userRouter;
