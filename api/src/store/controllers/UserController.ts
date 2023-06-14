@@ -18,7 +18,7 @@ export const getUserById = async (id: string): Promise<User | null> => {
   return user;
 };
 
-export const updateUserById = async (id: string, {...attibutes}: UserInput): Promise<User | null> => {
+export const updateUserById = async (id: string, attibutes: Partial<UserInput>): Promise<User | null> => {
   await User.update(attibutes, { where: { id: id } });
   const user = await User.findByPk(id, { include: [Product] });
   return user;
