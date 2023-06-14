@@ -30,17 +30,28 @@ userRouter.get("/:id", async (req: Request, res: Response) => {
     if (!id) throw new Error("El id del paciente no esta indefinido.");
 
     const user = await getUserById(id);
-    if (!user) throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
-    
+    if (!user)
+      throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
+
     res.status(200).json(user);
   } catch (error) {
     console.error(error);
-    res
-      .status(400)
-      .json({
-        error: "error al obtener todos los usuarios.",
-        route: "/users/:id",
-      });
+    res.status(400).json({
+      error: "error al obtener todos los usuarios.",
+      route: "/users/:id",
+    });
+  }
+});
+
+userRouter.post("/", async (req: Request, res: Response) => {
+  const userToCreate = req.body;
+
+  try {
+    const user = await createUser(userToCreate);
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: "error al crear un producto.", route: "/" });
   }
 });
 
