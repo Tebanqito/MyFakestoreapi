@@ -10,7 +10,7 @@ interface ProductState {
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
   try {
-    const response = await fetch('URL_DEL_BACKEND');
+    const response = await fetch(`http://localhost:3001/products`);
     const data = await response.json();
     return data;
   } catch (error) {
