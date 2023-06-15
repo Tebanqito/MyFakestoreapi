@@ -1,28 +1,26 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { RootState } from "../store";
-import { Product } from "../types";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { RootState } from '../store';
+import { Product } from '../types';
 
-interface ProductsState {
+interface ProductState {
   products: Product[];
   loading: boolean;
   error: string | null;
 }
 
-const initialState: ProductsState = {
-  products: [],
-  loading: false,
-  error: null,
-};
-
-export const fetchProducts = createAsyncThunk("products/fetchProducts", async () => {
-  const response = await axios.get(`http://localhost:3001/products`);
-  return response.data;
+export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
+  try {
+    const response = await fetch('URL_DEL_BACKEND');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error('Error al obtener los productos.');
+  }
 });
 
-const productsSlice = createSlice({
-  name: "products",
-  initialState,
+const productSlice = createSlice({
+  name: 'products',
+  initialState: { products: [], loading: false, error: null } as ProductState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -31,17 +29,15 @@ const productsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.products = action.payload;
         state.loading = false;
-        state.error = null;
+        state.products = action.payload;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Error desconocido";
+        state.error = action.error.message ?? 'Error desconocido';
       });
   },
 });
 
 export const selectProducts = (state: RootState) => state.products;
-
-export default productsSlice.reducer;
+export default productSlice.reducer;
