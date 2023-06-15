@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { RootState } from '../store';
-import { User } from '../types';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { RootState } from "../store";
+import { User } from "../types";
 
 interface UsersState {
   users: User[];
@@ -15,13 +15,13 @@ const initialState: UsersState = {
   error: null,
 };
 
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-  const response = await axios.get(`http://localhost:3001/users`); // Reemplaza 'URL_DEL_BACKEND' con la URL correspondiente
+export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
+  const response = await axios.get(`http://localhost:3001/users`);
   return response.data;
 });
 
 const usersSlice = createSlice({
-  name: 'users',
+  name: "users",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -37,7 +37,7 @@ const usersSlice = createSlice({
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Error desconocido';
+        state.error = action.error.message || "Error desconocido";
       });
   },
 });
