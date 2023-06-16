@@ -18,6 +18,11 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   return user;
 };
 
+export const getUserByName = async (name: string): Promise<User | null> => {
+  const user = await User.findOne({ where: { name: name } });
+  return user;
+};
+
 export const getUserById = async (id: string): Promise<User | null> => {
   const user = await User.findByPk(id, { include: [Product] });
   return user;
