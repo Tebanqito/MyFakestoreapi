@@ -8,13 +8,13 @@ export interface UserAttributes {
   email: string;
   name: string;
   password: string;
-  age: number;
-  description: string;
-  image: string;
+  age?: number;
+  description?: string;
+  image?: string;
 }
 
-export interface UserInput extends Optional<UserAttributes, "id"> {};
-export class User extends Model<UserAttributes, UserInput> {};
+export interface UserInput extends Optional<UserAttributes, "id"> {}
+export class User extends Model<UserAttributes, UserInput> {}
 
 User.init(
   {
@@ -38,15 +38,13 @@ User.init(
       allowNull: false,
     },
     age: {
-        type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER,
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     image: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
   },
   {
