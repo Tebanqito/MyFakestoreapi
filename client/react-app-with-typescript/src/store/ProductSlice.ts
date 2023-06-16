@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { Product } from '../types';
+import axios from "axios";
 
 interface ProductState {
   products: Product[];
@@ -10,11 +11,10 @@ interface ProductState {
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
   try {
-    const response = await fetch(`http://localhost:3001/products`);
-    const data = await response.json();
-    return data;
+    const response = await axios.get(`http://localhost:3001/api/products`);
+    return response.data;
   } catch (error) {
-    throw new Error('Error al obtener los productos.');
+    throw new Error(`Error: ${error}`);
   }
 });
 
