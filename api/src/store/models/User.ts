@@ -1,4 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
+import { Column, DataType, } from 'sequelize-typescript';
 import db from "../../config/database.config";
 
 import { Product } from "./Product";
@@ -14,7 +15,41 @@ export interface UserAttributes {
 }
 
 export interface UserInput extends Optional<UserAttributes, "id"> {}
-export class User extends Model<UserAttributes, UserInput> {}
+// export class User extends Model<UserAttributes, UserInput> {}
+export class User extends Model<UserAttributes, UserInput> {
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  name!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  password!: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  email!: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  description!: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  image!: string;
+
+  @Column({
+    type: DataType.NUMBER,
+  })
+  age!: number;
+}
 
 User.init(
   {
