@@ -8,9 +8,9 @@ import {
   emailValidator,
 } from "../controllers/UserController";
 
-const router = express.Router();
+const authRouter = express.Router();
 
-router.post("/userRegister", async (req: Request, res: Response) => {
+authRouter.post("/userRegister", async (req: Request, res: Response) => {
   const { name, password, email, description, image, age } = req.body;
 
   try {
@@ -39,7 +39,7 @@ router.post("/userRegister", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/userLogin", async (req: Request, res: Response) => {
+authRouter.post("/userLogin", async (req: Request, res: Response) => {
   const password: string = req.body.password;
   const userName: string = req.body.userName;
 
@@ -69,4 +69,4 @@ router.post("/userLogin", async (req: Request, res: Response) => {
   }
 });
 
-export default router;
+export default authRouter;
