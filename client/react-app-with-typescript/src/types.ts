@@ -4,6 +4,8 @@ export interface User {
   age: number;
   description: string;
   image: string;
+  email: string;
+  password: string;
 };
 
 type CategoryProduct =
