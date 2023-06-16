@@ -6,6 +6,7 @@ import { Product } from "./Product";
 export interface UserAttributes {
   id: string;
   name: string;
+  password: string;
   age: number;
   description: string;
   image: string;
@@ -22,6 +23,10 @@ User.init(
       allowNull: false,
     },
     name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
