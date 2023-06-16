@@ -34,7 +34,7 @@ export const createUser = createAsyncThunk(
 );
 
 export const updateUser = createAsyncThunk(
-  "users/createUser",
+  "users/updateUser",
   async (userData: { attributes: Partial<Omit<User, "id">>; id: string }) => {
     const response = await axios.put(
       `http://localhost:3001/api/users/update/${userData.id}`,
