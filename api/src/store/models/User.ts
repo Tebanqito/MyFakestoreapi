@@ -5,6 +5,7 @@ import { Product } from "./Product";
 
 export interface UserAttributes {
   id: string;
+  email: string;
   name: string;
   password: string;
   age: number;
@@ -22,9 +23,15 @@ User.init(
       primaryKey: true,
       allowNull: false,
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,
