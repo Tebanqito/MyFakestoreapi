@@ -39,3 +39,8 @@ export const deleteUserById = async (id: string): Promise<User | null> => {
   await User.destroy({ where: { id: id } });
   return user;
 };
+
+export const emailValidator = (email: string): boolean => {
+  const patronEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  return patronEmail.test(email);
+};
