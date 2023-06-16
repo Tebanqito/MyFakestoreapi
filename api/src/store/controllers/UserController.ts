@@ -1,15 +1,19 @@
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import { UserInput, User } from "../models/User";
 import { Product } from "../models/Product";
 
 export const createUser = async (user: UserInput): Promise<User> => {
-  const id = uuidv4();
-  const createdUser = await User.create({ ...user, id });
+  // const id = uuidv4();
+  // const createdUser = await User.create({ ...user, id });
+  const createdUser = await User.create(user);
   return createdUser;
 };
 
 export const getAllUsers = async (): Promise<User[]> => {
-  const users = await User.findAll({ include: [{ model: Product }] });
+  const users = await User.findAll({
+    attributes: ["id", "email", "name"],
+    include: [{ model: Product, attributes: ["title", "price", "category"] }]
+  });
   return users;
 };
 
@@ -23,18 +27,18 @@ export const getUserByName = async (name: string): Promise<User | null> => {
   return user;
 };
 
-export const getUserById = async (id: string): Promise<User | null> => {
+export const getUserById = async (id: number): Promise<User | null> => {
   const user = await User.findByPk(id, { include: [Product] });
   return user;
 };
 
-export const updateUserById = async (id: string, attibutes: Partial<UserInput>): Promise<User | null> => {
+export const updateUserById = async (id: number, attibutes: Partial<UserInput>): Promise<User | null> => {
   await User.update(attibutes, { where: { id: id } });
   const user = await User.findByPk(id, { include: [Product] });
   return user;
 };
 
-export const deleteUserById = async (id: string): Promise<User | null> => {
+export const deleteUserById = async (id: number): Promise<User | null> => {
   const user = await User.findByPk(id, { include: [Product] });
   await User.destroy({ where: { id: id } });
   return user;
