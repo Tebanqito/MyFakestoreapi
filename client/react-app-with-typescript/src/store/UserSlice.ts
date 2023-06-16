@@ -33,6 +33,16 @@ export const createUser = createAsyncThunk(
   }
 );
 
+export const deleteUser = createAsyncThunk(
+  "users/deleteUser",
+  async (id: string) => {
+    const response = await axios.post(
+      `http://localhost:3001/api/users/delete/${id}`
+    );
+    return response.data;
+  }
+);
+
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -62,6 +72,19 @@ const usersSlice = createSlice({
         state.error = null;
       })
       .addCase(createUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Error desconocido";
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Error desconocido";
       });
