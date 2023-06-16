@@ -27,6 +27,7 @@
 		"express": "^4.17.1",
 		"express-validator": "^6.10.0",
 		"sequelize": "^6.6.2",
+		"sequelize-typescript": "^2.1.5",
 		"sqlite3": "^5.0.2",
 		"uuid": "^8.3.2"
 	}
