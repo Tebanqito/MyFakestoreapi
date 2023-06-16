@@ -13,6 +13,11 @@ export const getAllUsers = async (): Promise<User[]> => {
   return users;
 };
 
+export const getUserByEmail = async (email: string): Promise<User | null> => {
+  const user = await User.findOne({ where: { email: email } });
+  return user;
+};
+
 export const getUserById = async (id: string): Promise<User | null> => {
   const user = await User.findByPk(id, { include: [Product] });
   return user;
