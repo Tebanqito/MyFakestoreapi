@@ -4,14 +4,14 @@ import { RootState } from "../store";
 import { User } from "../types";
 
 interface UsersState {
-  user: User;
+  user: User | null;
   users: User[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: UsersState = {
-  user: { id: "", name: "", age: 0, description: "", image: "" },
+  user: null,
   users: [],
   loading: false,
   error: null,
@@ -24,7 +24,7 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
 
 export const createUser = createAsyncThunk(
   "users/createUser",
-  async (userData: User) => {
+  async (userData: Omit<User, "id">) => {
     const response = await axios.post(
       `http://localhost:3001/api/users`,
       userData
