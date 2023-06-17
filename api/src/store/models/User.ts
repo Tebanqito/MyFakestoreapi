@@ -55,6 +55,3 @@ User.init(
     timestamps: false,
   }
 );
-
-User.hasMany(Product);
-User.belongsToMany(Product, { through: User });
