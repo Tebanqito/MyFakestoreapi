@@ -22,8 +22,10 @@ export class Product extends Model<ProductAttributes, ProductInput> {};
 Product.init(
   {
     id: {
-      type: DataTypes.UUIDV4,
+      // type: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
       allowNull: false,
     },
     title: {
