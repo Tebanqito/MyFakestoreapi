@@ -56,7 +56,10 @@ authRouter.post("/userLogin", async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Usuario no encontrado." });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.dataValues.password
+    );
 
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Contraseña invalida." });
