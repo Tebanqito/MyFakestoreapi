@@ -27,7 +27,7 @@ userRouter.get("/:id", async (req: Request, res: Response) => {
   try {
     if (!id) throw new Error("El id del paciente no esta indefinido.");
 
-    const user = await getUserById(id);
+    const user = await getUserById(parseInt(id));
     if (!user)
       throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
 
@@ -58,7 +58,7 @@ userRouter.put("/update/:id", async (req: Request, res: Response) => {
   const attributes = req.body;
 
   try {
-    const user = await updateUserById(id, attributes);
+    const user = await updateUserById(parseInt(id), attributes);
     if (!user)
       throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
 
@@ -76,7 +76,7 @@ userRouter.delete("/delete/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const user = await deleteUserById(id);
+    const user = await deleteUserById(parseInt(id));
     if (!user)
       throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
 
