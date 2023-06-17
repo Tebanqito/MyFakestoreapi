@@ -30,7 +30,9 @@ productRouter.get("/", async (req: Request, res: Response) => {
     res.status(200).json(products);
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: "error al obtener todos los productos.", route: "/" });
+    res
+      .status(400)
+      .json({ error: "error al obtener todos los productos.", route: "/" });
   }
 });
 
@@ -38,11 +40,13 @@ productRouter.get("/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const product = await getProductById(id);
+    const product = await getProductById(parseInt(id));
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: "error al obtener un producto por id.", route: "/:id" });
+    res
+      .status(400)
+      .json({ error: "error al obtener un producto por id.", route: "/:id" });
   }
 });
 
@@ -63,11 +67,16 @@ productRouter.put("/update/:id", async (req: Request, res: Response) => {
   const attributes = req.body;
 
   try {
-    const product = await updateProductById(id, attributes);
+    const product = await updateProductById(parseInt(id), attributes);
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: "error al actualizar un producto.", route: "/update/:id" });
+    res
+      .status(400)
+      .json({
+        error: "error al actualizar un producto.",
+        route: "/update/:id",
+      });
   }
 });
 
@@ -75,11 +84,13 @@ productRouter.delete("/delete/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const product = await deleteProductById(id);
+    const product = await deleteProductById(parseInt(id));
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: "error al eliminar un producto.", route: "/delete/:id" });
+    res
+      .status(400)
+      .json({ error: "error al eliminar un producto.", route: "/delete/:id" });
   }
 });
 
