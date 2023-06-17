@@ -10,36 +10,49 @@ export const createUser = async (user: UserInput): Promise<User> => {
 };
 
 export const getAllUsers = async (): Promise<User[]> => {
-  const users = await User.findAll({
-    attributes: ["id", "email", "name"],
-    include: [{ model: Product, attributes: ["title", "price", "category"] }]
-  });
+  const users = await User.findAll({ attributes: ["id", "email", "name", "image"] });
   return users;
 };
 
 export const getUserByEmail = async (email: string): Promise<User | null> => {
-  const user = await User.findOne({ where: { email: email } });
+  const user = await User.findOne({
+    where: { email: email },
+    attributes: ["id", "email", "name", "image"],
+  });
   return user;
 };
 
 export const getUserByName = async (name: string): Promise<User | null> => {
-  const user = await User.findOne({ where: { name: name } });
+  const user = await User.findOne({
+    where: { name: name },
+    attributes: ["id", "email", "name", "image"],
+  });
   return user;
 };
 
 export const getUserById = async (id: number): Promise<User | null> => {
-  const user = await User.findByPk(id, { include: [Product] });
+  const user = await User.findByPk(id, {
+    attributes: ["id", "name", "email", "description", "image", "age"],
+    include: [{ model: Product, attributes: ["title", "price", "category"] }],
+  });
   return user;
 };
 
-export const updateUserById = async (id: number, attibutes: Partial<UserInput>): Promise<User | null> => {
+export const updateUserById = async (
+  id: number,
+  attibutes: Partial<UserInput>
+): Promise<User | null> => {
   await User.update(attibutes, { where: { id: id } });
-  const user = await User.findByPk(id, { include: [Product] });
+  const user = await User.findByPk(id, {
+    attributes: ["id", "name", "email", "image"],
+  });
   return user;
 };
 
 export const deleteUserById = async (id: number): Promise<User | null> => {
-  const user = await User.findByPk(id, { include: [Product] });
+  const user = await User.findByPk(id, {
+    attributes: ["id", "name", "email", "image"],
+  });
   await User.destroy({ where: { id: id } });
   return user;
 };
