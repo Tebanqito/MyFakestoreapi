@@ -55,3 +55,6 @@ User.init(
     timestamps: false,
   }
 );
+
+User.hasMany(Product);
+Product.belongsTo(User);
