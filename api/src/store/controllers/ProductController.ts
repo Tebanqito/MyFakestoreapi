@@ -7,18 +7,17 @@ export const createProduct = async (
   product: ProductCreationAttributes
 ): Promise<Product> => {
   const id = uuidv4();
-  const createdProduct = await Product.create({ ...product, id });
-  // const createdProduct = await Product.create(product);
+  const createdProduct: Product = await Product.create({ ...product, id });
   return createdProduct;
 };
 
 export const getAllProducts = async (): Promise<Product[]> => {
-  const products = await Product.findAll();
+  const products: Product[] = await Product.findAll();
   return products;
 };
 
 export const getProductById = async (id: string): Promise<Product | null> => {
-  const product = await Product.findByPk(id, {
+  const product: Product | null = await Product.findByPk(id, {
     attributes: ["id", "price", "title", "image", "category", "description"],
   });
   return product;
@@ -29,16 +28,14 @@ export const updateProductById = async (
   attributes: Partial<ProductCreationAttributes>
 ): Promise<Product | null> => {
   await Product.update(attributes, { where: { id } });
-  const updatedProduct = await Product.findByPk(id, {
-    attributes: ["id", "title", "image", "price", "category", "description"],
-  });
+  const updatedProduct: Product | null = await getProductById(id);
   return updatedProduct;
 };
 
 export const deleteProductById = async (
   id: string
 ): Promise<Product | null> => {
-  const productToDelete = await Product.findByPk(id, {
+  const productToDelete: Product | null = await Product.findByPk(id, {
     attributes: ["id", "title", "image"],
   });
   await Product.destroy({ where: { id } });
