@@ -1,16 +1,20 @@
-// import { v4 as uuidv4 } from "uuid";
-import { UserInput, User } from "../models/User";
+import { v4 as uuidv4 } from "uuid";
+import { UserCreationAttributes, User } from "../models/User";
 import { Product } from "../models/Product";
 
-export const createUser = async (user: UserInput): Promise<User> => {
-  // const id = uuidv4();
-  // const createdUser = await User.create({ ...user, id });
-  const createdUser = await User.create(user);
+export const createUser = async (
+  user: UserCreationAttributes
+): Promise<User> => {
+  const id = uuidv4();
+  const createdUser = await User.create({ ...user, id });
+  // const createdUser = await User.create(user);
   return createdUser;
 };
 
 export const getAllUsers = async (): Promise<User[]> => {
-  const users = await User.findAll({ attributes: ["id", "email", "name", "image"] });
+  const users = await User.findAll({
+    attributes: ["id", "email", "name", "image"],
+  });
   return users;
 };
 
@@ -30,7 +34,7 @@ export const getUserByName = async (name: string): Promise<User | null> => {
   return user;
 };
 
-export const getUserById = async (id: number): Promise<User | null> => {
+export const getUserById = async (id: string): Promise<User | null> => {
   const user = await User.findByPk(id, {
     attributes: ["id", "name", "email", "description", "image", "age"],
     include: [{ model: Product, attributes: ["title", "price", "category"] }],
@@ -39,8 +43,8 @@ export const getUserById = async (id: number): Promise<User | null> => {
 };
 
 export const updateUserById = async (
-  id: number,
-  attibutes: Partial<UserInput>
+  id: string,
+  attibutes: Partial<UserCreationAttributes>
 ): Promise<User | null> => {
   await User.update(attibutes, { where: { id: id } });
   const user = await User.findByPk(id, {
@@ -49,7 +53,7 @@ export const updateUserById = async (
   return user;
 };
 
-export const deleteUserById = async (id: number): Promise<User | null> => {
+export const deleteUserById = async (id: string): Promise<User | null> => {
   const user = await User.findByPk(id, {
     attributes: ["id", "name", "email", "image"],
   });
@@ -60,4 +64,10 @@ export const deleteUserById = async (id: number): Promise<User | null> => {
 export const emailValidator = (email: string): boolean => {
   const patronEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
   return patronEmail.test(email);
+};
+
+export const linkProduct = async (userId: string, productId: string): Promise<User | null> => {
+  const user: User | null = await await getUserById(userId);
+  await user?.addProduct(productId);
+  return user;
 };
