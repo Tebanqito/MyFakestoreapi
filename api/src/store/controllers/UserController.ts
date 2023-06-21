@@ -8,7 +8,6 @@ export const createUser = async (
 ): Promise<User> => {
   const id = uuidv4();
   const createdUser = await User.create({ ...user, id });
-  // const createdUser = await User.create(user);
   return createdUser;
 };
 
@@ -89,6 +88,13 @@ export const getOwnProducts = async (userId: string): Promise<Product[]> => {
 export const getOwnProductsByCategory = async (userId: string, category: string): Promise<Product[]> => {
   const user: User | null = await getUserById(userId);
   const products: Product[] = await user?.getProducts() as Product[];
-  const productFilters: Product[] = products.filter((p) => p.category === category);
-  return productFilters;
+  const productByCategory: Product[] = products.filter((p) => p.category === category);
+  return productByCategory;
+};
+
+export const getOwnProductsByName = async (userId: string, nameProduct: string): Promise<Product[]> => {
+  const user: User | null = await getUserById(userId);
+  const products: Product[] = await user?.getProducts() as Product[];
+  const productByName: Product[] = products.filter((p) => p.title === nameProduct);
+  return productByName; 
 };
