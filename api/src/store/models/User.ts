@@ -41,13 +41,13 @@ export class User extends Model<
   declare image: string | null;
 
   declare getProducts: HasManyGetAssociationsMixin<Product>;
-  declare addProduct: HasManyAddAssociationMixin<Product, number>;
-  declare addProducts: HasManyAddAssociationsMixin<Product, number>;
-  declare setProducts: HasManySetAssociationsMixin<Product, number>;
-  declare removeProduct: HasManyRemoveAssociationMixin<Product, number>;
-  declare removeProducts: HasManyRemoveAssociationsMixin<Product, number>;
-  declare hasProduct: HasManyHasAssociationMixin<Product, number>;
-  declare hasProducts: HasManyHasAssociationsMixin<Product, number>;
+  declare addProduct: HasManyAddAssociationMixin<Product, string>;
+  declare addProducts: HasManyAddAssociationsMixin<Product, string>;
+  declare setProducts: HasManySetAssociationsMixin<Product, string>;
+  declare removeProduct: HasManyRemoveAssociationMixin<Product, string>;
+  declare removeProducts: HasManyRemoveAssociationsMixin<Product, string>;
+  declare hasProduct: HasManyHasAssociationMixin<Product, string>;
+  declare hasProducts: HasManyHasAssociationsMixin<Product, string>;
   declare countProducts: HasManyCountAssociationsMixin;
   declare createProduct: HasManyCreateAssociationMixin<Product, "id">;
 
