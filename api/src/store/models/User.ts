@@ -1,28 +1,78 @@
-import { DataTypes, Model, Optional } from "sequelize";
 import db from "../../config/database.config";
-
 import { Product } from "./Product";
+import {
+  Association,
+  DataTypes,
+  HasManyAddAssociationMixin,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
+  HasManyGetAssociationsMixin,
+  HasManyHasAssociationMixin,
+  HasManySetAssociationsMixin,
+  HasManyAddAssociationsMixin,
+  HasManyHasAssociationsMixin,
+  HasManyRemoveAssociationMixin,
+  HasManyRemoveAssociationsMixin,
+  Model,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+  NonAttribute,
+} from "sequelize";
 
-export interface UserAttributes {
-  id: string;
-  email: string;
+interface UserAttributes {
+  id: number;
   name: string;
   password: string;
-  age?: number;
-  description?: string;
-  image?: string;
-}
+  email: string;
+  age: number;
+  image: string;
+};
 
-export interface UserInput extends Optional<UserAttributes, "id"> {}
-export class User extends Model<UserAttributes, UserInput> {}
+export class User extends Model<
+  InferAttributes<User>,
+  InferCreationAttributes<User>
+> {
+  declare id: CreationOptional<string>;
+  declare name: string;
+  declare password: string;
+  declare email: string;
+  declare age: number | null;
+  declare image: string | null;
+
+  declare getProducts: HasManyGetAssociationsMixin<Product>;
+  declare addProduct: HasManyAddAssociationMixin<Product, number>;
+  declare addProducts: HasManyAddAssociationsMixin<Product, number>;
+  declare setProducts: HasManySetAssociationsMixin<Product, number>;
+  declare removeProduct: HasManyRemoveAssociationMixin<Product, number>;
+  declare removeProducts: HasManyRemoveAssociationsMixin<Product, number>;
+  declare hasProduct: HasManyHasAssociationMixin<Product, number>;
+  declare hasProducts: HasManyHasAssociationsMixin<Product, number>;
+  declare countProducts: HasManyCountAssociationsMixin;
+  declare createProduct: HasManyCreateAssociationMixin<Product, "id">;
+
+  declare products?: NonAttribute<Product[]>;
+
+  declare static associations: {
+    projects: Association<User, Product>;
+  };
+};
+
+export type UserCreationAttributes = Omit<User, "id">;
 
 User.init(
   {
     id: {
-      // type: DataTypes.UUIDV4,
       type: DataTypes.INTEGER,
-      primaryKey: true,
       autoIncrement: true,
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     email: {
@@ -30,31 +80,17 @@ User.init(
       allowNull: false,
       unique: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     age: {
       type: DataTypes.INTEGER,
-    },
-    description: {
-      type: DataTypes.STRING,
+      allowNull: true,
     },
     image: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {
     sequelize: db,
-    tableName: "users",
-    timestamps: false,
+    modelName: "User",
   }
 );
-
-User.hasMany(Product);
-Product.belongsTo(User);

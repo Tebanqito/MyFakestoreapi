@@ -1,32 +1,51 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import {
+  DataTypes,
+  Model,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+  ForeignKey,
+} from "sequelize";
 import db from "../../config/database.config";
+import { User } from "./User";
 
-type CategoryProduct =
-  | "electronics"
+type Category =
+  | "electronic"
   | "jewelery"
   | "men's clothing"
   | "women's clothing";
 
-export interface ProductAttributes {
-  id: string;
+interface ProductAttributes {
+  id: number;
   title: string;
   price: number;
-  category: CategoryProduct;
-  description: string;
+  category: Category;
   image: string;
+  description: string;
 }
 
-export interface ProductInput extends Optional<ProductAttributes, "id"> {};
-export class Product extends Model<ProductAttributes, ProductInput> {};
+export class Product extends Model<
+  InferAttributes<Product>,
+  InferCreationAttributes<Product>
+> {
+  declare id: CreationOptional<string>;
+  declare title: string;
+  declare category: Category;
+  declare description: string;
+  declare price: number;
+  declare image: string;
+
+  declare userId: ForeignKey<User["id"]>;
+};
+
+export type ProductCreationAttributes = Omit<Product, "id">;
 
 Product.init(
   {
     id: {
-      // type: DataTypes.UUIDV4,
       type: DataTypes.INTEGER,
-      primaryKey: true,
       autoIncrement: true,
-      allowNull: false,
+      primaryKey: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -36,27 +55,21 @@ Product.init(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    category: {
-      type: DataTypes.ENUM(
-        "electronics",
-        "jewelery",
-        "men's clothing",
-        "women's clothing"
-      ),
+    image: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    image: {
+    category: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   },
   {
     sequelize: db,
-    tableName: "products",
-    timestamps: false,
+    modelName: "Product",
   }
 );
