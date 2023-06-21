@@ -7,19 +7,19 @@ export const createUser = async (
   user: UserCreationAttributes
 ): Promise<User> => {
   const id = uuidv4();
-  const createdUser = await User.create({ ...user, id });
+  const createdUser: User = await User.create({ ...user, id });
   return createdUser;
 };
 
 export const getAllUsers = async (): Promise<User[]> => {
-  const users = await User.findAll({
+  const users: User[] = await User.findAll({
     attributes: ["id", "email", "name", "image"],
   });
   return users;
 };
 
 export const getUserByEmail = async (email: string): Promise<User | null> => {
-  const user = await User.findOne({
+  const user: User | null = await User.findOne({
     where: { email: email },
     attributes: ["id", "email", "name", "image"],
   });
@@ -27,7 +27,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
 };
 
 export const getUserByName = async (name: string): Promise<User | null> => {
-  const user = await User.findOne({
+  const user: User | null = await User.findOne({
     where: { name: name },
     attributes: ["id", "email", "name", "image"],
   });
@@ -35,7 +35,7 @@ export const getUserByName = async (name: string): Promise<User | null> => {
 };
 
 export const getUserById = async (id: string): Promise<User | null> => {
-  const user = await User.findByPk(id, {
+  const user: User | null = await User.findByPk(id, {
     attributes: ["id", "name", "email", "description", "image", "age"],
     include: [{ model: Product, attributes: ["title", "price", "category"] }],
   });
@@ -47,16 +47,12 @@ export const updateUserById = async (
   attibutes: Partial<UserCreationAttributes>
 ): Promise<User | null> => {
   await User.update(attibutes, { where: { id: id } });
-  const user = await User.findByPk(id, {
-    attributes: ["id", "name", "email", "image"],
-  });
+  const user: User | null = await getUserById(id);
   return user;
 };
 
 export const deleteUserById = async (id: string): Promise<User | null> => {
-  const user = await User.findByPk(id, {
-    attributes: ["id", "name", "email", "image"],
-  });
+  const user: User | null = await getUserById(id);
   await User.destroy({ where: { id: id } });
   return user;
 };
