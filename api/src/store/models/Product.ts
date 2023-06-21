@@ -22,7 +22,7 @@ interface ProductAttributes {
   category: Category;
   image: string;
   description: string;
-}
+};
 
 export class Product extends Model<
   InferAttributes<Product>,
