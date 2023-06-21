@@ -85,3 +85,10 @@ export const getOwnProducts = async (userId: string): Promise<Product[]> => {
   const products: Product[] = await user?.getProducts() as Product[];
   return products; 
 };
+
+export const getOwnProductsByCategory = async (userId: string, category: string): Promise<Product[]> => {
+  const user: User | null = await getUserById(userId);
+  const products: Product[] = await user?.getProducts() as Product[];
+  const productFilters: Product[] = products.filter((p) => p.category === category);
+  return productFilters;
+};
