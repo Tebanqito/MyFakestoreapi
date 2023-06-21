@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { UserCreationAttributes, User } from "../models/User";
 import { Product } from "../models/Product";
+import { getProductById } from "./ProductController";
 
 export const createUser = async (
   user: UserCreationAttributes
@@ -70,4 +71,11 @@ export const linkProduct = async (userId: string, productId: string): Promise<Us
   const user: User | null = await await getUserById(userId);
   await user?.addProduct(productId);
   return user;
+};
+
+export const unlinkProduct = async (userId: string, productId: string): Promise<Product | null> => {
+  const user: User | null = await await getUserById(userId);
+  const product: Product | null = await getProductById(productId);
+  await user?.removeProduct(productId);
+  return product;
 };
