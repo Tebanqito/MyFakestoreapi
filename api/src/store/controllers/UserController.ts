@@ -74,8 +74,14 @@ export const linkProduct = async (userId: string, productId: string): Promise<Us
 };
 
 export const unlinkProduct = async (userId: string, productId: string): Promise<Product | null> => {
-  const user: User | null = await await getUserById(userId);
+  const user: User | null = await getUserById(userId);
   const product: Product | null = await getProductById(productId);
   await user?.removeProduct(productId);
   return product;
+};
+
+export const getOwnProducts = async (userId: string): Promise<Product[]> => {
+  const user: User | null = await getUserById(userId);
+  const products: Product[] = await user?.getProducts() as Product[];
+  return products; 
 };
