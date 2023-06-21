@@ -35,7 +35,7 @@ export class Product extends Model<
   declare price: number;
   declare image: string;
 
-  declare userId: ForeignKey<User["id"]>;
+  declare userId: ForeignKey<User["id"] | null>;
 };
 
 export type ProductCreationAttributes = Omit<Product, "id">;
