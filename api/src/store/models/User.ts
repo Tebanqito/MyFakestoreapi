@@ -20,15 +20,6 @@ import {
   NonAttribute,
 } from "sequelize";
 
-interface UserAttributes {
-  id: number;
-  name: string;
-  password: string;
-  email: string;
-  age: number;
-  image: string;
-};
-
 export class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
@@ -58,7 +49,14 @@ export class User extends Model<
   };
 };
 
-export type UserCreationAttributes = Omit<User, "id">;
+export interface UserAttributes {
+  id: number;
+  name: string;
+  password: string;
+  email: string;
+  age: number | null;
+  image: string | null;
+};
 
 User.init(
   {
