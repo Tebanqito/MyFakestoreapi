@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
+import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
-import { User } from "../models/User";
+import { User, UserAttributes } from "../models/User";
 import {
   createUser,
   getUserByEmail,
@@ -11,7 +12,11 @@ import {
 const authRouter = express.Router();
 
 authRouter.post("/userRegister", async (req: Request, res: Response) => {
-  const { name, password, email, description, image, age } = req.body;
+ const name: string= req.body.name as string;
+ const email: string = req.body.email as string;
+ const image: string | null = req.body.imageas as string;
+ const age: number | null = req.body.age as number;
+ const password: string = req.body.password as string;
 
   try {
     const userByEmail = await getUserByEmail(email);
@@ -23,14 +28,14 @@ authRouter.post("/userRegister", async (req: Request, res: Response) => {
       throw new Error(`Ya existe un usuario con el nombre ${name}.`);
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await createUser({
+    const userToCreate: Omit <UserAttributes, "id"> = {
       name,
-      password: hashedPassword,
+      password: String(hashedPassword),
       email,
-      description,
       image,
       age,
-    });
+    }
+    const user = await createUser(userToCreate);
 
     res.status(200).json(user);
   } catch (error) {
