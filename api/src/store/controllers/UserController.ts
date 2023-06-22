@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { UserCreationAttributes, User } from "../models/User";
+import { User, UserAttributes } from "../models/User";
 import { Product } from "../models/Product";
 import { getProductById } from "./ProductController";
 
 export const createUser = async (
-  user: UserCreationAttributes
+  user: Omit<UserAttributes, "id">
 ): Promise<User> => {
   const id = uuidv4();
   const createdUser: User = await User.create({ ...user, id });
@@ -44,7 +44,7 @@ export const getUserById = async (id: string): Promise<User | null> => {
 
 export const updateUserById = async (
   id: string,
-  attibutes: Partial<UserCreationAttributes>
+  attibutes: Partial<Omit<UserAttributes, "id">>
 ): Promise<User | null> => {
   await User.update(attibutes, { where: { id: id } });
   const user: User | null = await getUserById(id);
