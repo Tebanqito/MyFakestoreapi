@@ -1,63 +1,63 @@
-import { Optional } from "sequelize";
-import {
-  Table,
-  Column,
-  Model,
-  BelongsTo,
-  DataType,
-  ForeignKey,
-  PrimaryKey,
-  IsUUID,
-} from "sequelize-typescript";
-// import db from "../../config/database.config";
-import { User } from "./user.model";
-
-type Category =
-  | "electronic"
+import { DataTypes, Model, Optional } from "sequelize";
+import db from "../../config/database.config";
+type CategoryProduct =
+  | "electronics"
   | "jewelery"
   | "men's clothing"
   | "women's clothing";
-
 export interface ProductAttributes {
   id: string;
   title: string;
   price: number;
-  category: Category;
-  image: string;
+  category: CategoryProduct;
   description: string;
+  image: string;
+  userId: string;
 }
 
-export interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
+export interface ProductInput extends Optional<ProductAttributes, "id"> {};
+export class Product extends Model<ProductAttributes, ProductInput> {};
 
-@Table
-export class Product extends Model<
-  ProductAttributes,
-  ProductCreationAttributes
-> {
-
-  // @IsUUID(4)
-  // @PrimaryKey
-  id!: string;
-
-  @Column(DataType.STRING)
-  title!: string;
-
-  @Column(DataType.FLOAT)
-  price!: number;
-
-  @Column(DataType.STRING)
-  image!: string;
-
-  @Column(DataType.STRING)
-  description!: string;
-
-  @Column(DataType.STRING)
-  category!: Category;
-
-  @ForeignKey(() => User)
-  @Column
-  userId!: string;
-
-  @BelongsTo(() => User)
-  user!: User;
-};
+Product.init(
+  {
+    id: {
+      type: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false,
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    category: {
+      type: DataTypes.ENUM(
+        "electronics",
+        "jewelery",
+        "men's clothing",
+        "women's clothing"
+      ),
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    }
+  },
+  {
+    sequelize: db,
+    tableName: "products",
+    timestamps: false,
+  }
+);
