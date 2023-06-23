@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import { ProductCreationAttributes, Product } from "../models/Product";
-import { User } from "../models/User";
+import { ProductAttributes, Product } from "../models/product.model";
+import { User } from "../models/user.model";
 import { getUserById } from "./UserController";
 
 export const createProduct = async (
-  product: ProductCreationAttributes
+  product: Omit<ProductAttributes, "id">
 ): Promise<Product> => {
   const id = uuidv4();
   const createdProduct: Product = await Product.create({ ...product, id });
@@ -23,9 +23,18 @@ export const getProductById = async (id: string): Promise<Product | null> => {
   return product;
 };
 
+export const getProductsByIds = async (productsIds: string[]): Promise<Product[]> => {
+  let products: Product[] = [];
+  for (let index = 0; index < productsIds.length; index++) {
+      const product: Product = await getProductById(productsIds[index]) as Product;
+      products.push(product);
+  }
+  return products;
+};
+
 export const updateProductById = async (
   id: string,
-  attributes: Partial<ProductCreationAttributes>
+  attributes: Partial<Omit<ProductAttributes, "id">>
 ): Promise<Product | null> => {
   await Product.update(attributes, { where: { id } });
   const updatedProduct: Product | null = await getProductById(id);
@@ -44,6 +53,6 @@ export const deleteProductById = async (
 
 export const getOwnUser = async (productId: string): Promise<User | null> => {
   const product: Product | null = await getProductById(productId);
-  const user: User | null = await getUserById(String(product?.userId));
+  const user: User | null = await getUserById(product?.dataValues.userId as string);
   return user;
 };
