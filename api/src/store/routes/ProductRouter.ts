@@ -6,7 +6,7 @@ import {
   updateProductById,
   deleteProductById,
 } from "../controllers/ProductController";
-import { ProductAttributes } from "../models/Product";
+import { ProductAttributes } from "../models/product.model";
 import axios from "axios";
 
 const productRouter = Router();
@@ -37,10 +37,10 @@ productRouter.get("/", async (req: Request, res: Response) => {
 });
 
 productRouter.get("/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id: string = req.params.id;
 
   try {
-    const product = await getProductById(parseInt(id));
+    const product = await getProductById(id);
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
@@ -63,11 +63,11 @@ productRouter.post("/", async (req: Request, res: Response) => {
 });
 
 productRouter.put("/update/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id: string = req.params.id;
   const attributes = req.body;
 
   try {
-    const product = await updateProductById(parseInt(id), attributes);
+    const product = await updateProductById(id, attributes);
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
@@ -81,10 +81,10 @@ productRouter.put("/update/:id", async (req: Request, res: Response) => {
 });
 
 productRouter.delete("/delete/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id: string = req.params.id;
 
   try {
-    const product = await deleteProductById(parseInt(id));
+    const product = await deleteProductById(id);
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
