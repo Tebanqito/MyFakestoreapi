@@ -32,6 +32,16 @@ export const getProductsByIds = async (productsIds: string[]): Promise<Product[]
   return products;
 };
 
+export const getProductByIds = async (productsIds: string[], productId: string): Promise<Product | null> => {
+  for (let index = 0; index < productsIds.length; index++) {
+      if (productsIds[index] === productId) {
+        const product: Product | null = await getProductById(productId);
+        return product;
+      }
+  }
+  return null;
+};
+
 export const updateProductById = async (
   id: string,
   attributes: Partial<Omit<ProductAttributes, "id">>
