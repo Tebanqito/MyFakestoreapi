@@ -21,7 +21,7 @@ export class Product extends Model<ProductAttributes, ProductInput> {};
 Product.init(
   {
     id: {
-      type: DataTypes.UUIDV4,
+      type: DataTypes.STRING,
       primaryKey: true,
       allowNull: false,
     },

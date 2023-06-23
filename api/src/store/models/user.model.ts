@@ -17,7 +17,7 @@ export class User extends Model<UserAttributes, UserInput> {};
 User.init(
   {
     id: {
-      type: DataTypes.UUIDV4,
+      type: DataTypes.STRING,
       primaryKey: true,
       allowNull: false,
     },
