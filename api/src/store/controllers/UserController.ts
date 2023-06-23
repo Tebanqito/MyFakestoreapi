@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import { User, UserAttributes } from "../models/User";
-import { Product } from "../models/Product";
-import { getProductById } from "./ProductController";
+import { User, UserAttributes } from "../models/user.model";
+import { Product } from "../models/product.model";
+import { getProductById, getProductsByIds } from "./ProductController";
 
 export const createUser = async (
   user: Omit<UserAttributes, "id">
@@ -62,35 +62,32 @@ export const emailValidator = (email: string): boolean => {
   return patronEmail.test(email);
 };
 
-export const linkProduct = async (userId: string, productId: string): Promise<User | null> => {
-  const user: User | null = await await getUserById(userId);
-  await user?.addProduct(productId);
+export const linkProduct = async (
+  userId: string,
+  productId: string
+): Promise<User | null> => {
+  const user: User | null = await getUserById(userId);
+  user?.dataValues.products.push(productId);
+  await updateUserById(userId, { products: user?.dataValues.products });
   return user;
 };
 
-export const unlinkProduct = async (userId: string, productId: string): Promise<Product | null> => {
+export const unlinkProduct = async (
+  userId: string,
+  productId: string
+): Promise<Product | null> => {
   const user: User | null = await getUserById(userId);
+  const newProducts: string[] = user?.dataValues.products.filter(
+    (p) => p !== productId
+  ) as string[];
+  await updateUserById(userId, { products: newProducts });
   const product: Product | null = await getProductById(productId);
-  await user?.removeProduct(productId);
   return product;
 };
 
 export const getOwnProducts = async (userId: string): Promise<Product[]> => {
   const user: User | null = await getUserById(userId);
-  const products: Product[] = await user?.getProducts() as Product[];
-  return products; 
-};
-
-export const getOwnProductsByCategory = async (userId: string, category: string): Promise<Product[]> => {
-  const user: User | null = await getUserById(userId);
-  const products: Product[] = await user?.getProducts() as Product[];
-  const productByCategory: Product[] = products.filter((p) => p.category === category);
-  return productByCategory;
-};
-
-export const getOwnProductsByName = async (userId: string, nameProduct: string): Promise<Product[]> => {
-  const user: User | null = await getUserById(userId);
-  const products: Product[] = await user?.getProducts() as Product[];
-  const productByName: Product[] = products.filter((p) => p.title === nameProduct);
-  return productByName; 
+  const productsIds: string[] = user?.dataValues.products as string[];
+  const products: Product[] = await getProductsByIds(productsIds);
+  return products;
 };
