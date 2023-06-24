@@ -3,12 +3,11 @@ import {
   createUser,
   getAllUsers,
   getUserById,
-  // updateUserById,
+  updateUserById,
   // deleteUserById,
   linkProduct
 } from "../controllers/UserController";
 import { User, UserNoPassword } from "../models/user.model";
-import { Product } from "../models/product.model";
 
 const userRouter = Router();
 
@@ -51,7 +50,7 @@ userRouter.post("/", async (req: Request, res: Response) => {
     const user: User = await createUser(userToCreate);
     if (!user) throw new Error();
 
-    res.status(200).json({ success: "Usuario creado con exito." });
+    res.status(200).json({ success: `Usuario ${user.dataValues.id} creado con exito.` });
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: "error al crear un producto.", route: "/" });
@@ -73,24 +72,24 @@ userRouter.post("/linkProduct/:id", async (req: Request, res: Response) => {
   }
 });
 
-// userRouter.put("/update/:id", async (req: Request, res: Response) => {
-//   const id: string = req.params.id;
-//   const attributes = req.body;
+userRouter.put("/update/:id", async (req: Request, res: Response) => {
+  const id: string = req.params.id;
+  const attributes = req.body;
 
-//   try {
-//     const user = await updateUserById(id, attributes);
-//     if (!user)
-//       throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
+  try {
+    const user = await updateUserById(id, attributes);
+    if (!user)
+      throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
 
-//     res.status(200).json(user);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(400).json({
-//       error: "error al actualizar un usuario.",
-//       route: "/update/:id",
-//     });
-//   }
-// });
+    res.status(200).json({ update: `Usuario ${user.email} actualizado.`});
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      error: "error al actualizar un usuario.",
+      route: "/update/:id",
+    });
+  }
+});
 
 // userRouter.delete("/delete/:id", async (req: Request, res: Response) => {
 //   const id: string = req.params.id;
