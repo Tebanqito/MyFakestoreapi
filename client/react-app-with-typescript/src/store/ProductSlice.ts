@@ -6,6 +6,7 @@ import {
   getProductById,
   createProduct,
   updateProductById,
+  deleteProductById,
 } from "./actions/ProductActions";
 
 interface ProductState {
@@ -67,6 +68,18 @@ const productSlice = createSlice({
         state.product = action.payload;
       })
       .addCase(updateProductById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Error desconocido";
+      })
+      .addCase(deleteProductById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProductById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.product = action.payload;
+      })
+      .addCase(deleteProductById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Error desconocido";
       });
