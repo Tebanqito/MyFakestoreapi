@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../store/AuthSlice';
+import { loginUser } from '../store/actions/AuthActions';
 import { AppDispatch } from '../store';
 
 const LoginUser: React.FC = () => {

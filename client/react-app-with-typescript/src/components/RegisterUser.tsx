@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../store/AuthSlice';
+import { registerUser } from '../store/actions/AuthActions';
 import { AppDispatch } from '../store';
 
 const RegisterUser: React.FC = () => {
@@ -13,7 +13,7 @@ const RegisterUser: React.FC = () => {
     const [email, setEmail] = useState<string>("");
 
     const handleRegister = (): void => {
-        dispatch(registerUser({ name, image, description, age, email, password }));
+        dispatch(registerUser({ name, image, age, email, password }));
     };
 
     return (
