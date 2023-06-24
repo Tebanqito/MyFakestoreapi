@@ -21,7 +21,7 @@ export const getProductById = createAsyncThunk(
 );
 
 export const createProduct = createAsyncThunk(
-  "products/getProductById",
+  "products/create",
   async (productData: Product) => {
     const response = await axios.post(
       `http://localhost:3001/api/products`,
@@ -32,7 +32,7 @@ export const createProduct = createAsyncThunk(
 );
 
 export const updateProductById = createAsyncThunk(
-  "products/getProductById",
+  "products/update",
   async (data: { productData: Partial<Omit<Product, "id">>; id: string }) => {
     const response = await axios.put(
       `http://localhost:3001/api/products/update/${data.id}`,
@@ -43,10 +43,20 @@ export const updateProductById = createAsyncThunk(
 );
 
 export const deleteProductById = createAsyncThunk(
-  "products/getProductById",
+  "products/delete",
   async (productId: string) => {
     const response = await axios.delete(
       `http://localhost:3001/api/products/delete/${productId}`
+    );
+    return response.data;
+  }
+);
+
+export const getOwnUser = createAsyncThunk(
+  "products/ownUser",
+  async (productId: string) => {
+    const response = await axios.get(
+      `http://localhost:3001/api/products/getOwnUser/${productId}`
     );
     return response.data;
   }
