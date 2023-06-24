@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { ProductAttributes, Product } from "../models/product.model";
-import { User } from "../models/user.model";
+import { User, UserNoPassword } from "../models/user.model";
 import { getUserById } from "./UserController";
 
 export const createProduct = async (
@@ -61,8 +61,8 @@ export const deleteProductById = async (
   return productToDelete;
 };
 
-export const getOwnUser = async (productId: string): Promise<User | null> => {
+export const getOwnUser = async (productId: string): Promise<UserNoPassword | null> => {
   const product: Product | null = await getProductById(productId);
-  const user: User | null = await getUserById(product?.dataValues.userId as string);
+  const user: UserNoPassword = await getUserById(product?.dataValues.userId as string);
   return user;
 };
