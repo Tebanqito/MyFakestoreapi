@@ -63,14 +63,14 @@ export const getUserByIdWhitPasswword = async (id: string): Promise<UserAttribut
   return user;
 };
 
-// export const updateUserById = async (
-//   id: string,
-//   attibutes: Partial<Omit<UserAttributes, "id">>
-// ): Promise<User | null> => {
-//   await User.update(attibutes, { where: { id: id } });
-//   const user: User | null = await getUserById(id);
-//   return user;
-// };
+export const updateUserById = async (
+  id: string,
+  attibutes: Partial<Omit<UserAttributes, "id">>
+): Promise<UserAttributes | null> => {
+  await User.update(attibutes, { where: { id: id } });
+  const user: UserAttributes | null = await getUserByIdWhitPasswword(id);
+  return user;
+};
 
 // export const deleteUserById = async (id: string): Promise<User | null> => {
 //   const user: User | null = await getUserById(id);
