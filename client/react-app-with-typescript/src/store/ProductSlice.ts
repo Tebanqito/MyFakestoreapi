@@ -4,6 +4,7 @@ import { RootState } from "../store";
 import {
   fetchProducts,
   getProductById,
+  createProduct,
 } from "./actions/ProductActions";
 
 interface ProductState {
@@ -41,6 +42,18 @@ const productSlice = createSlice({
         state.product = action.payload;
       })
       .addCase(getProductById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Error desconocido";
+      })
+      .addCase(createProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.product = action.payload;
+      })
+      .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Error desconocido";
       });
