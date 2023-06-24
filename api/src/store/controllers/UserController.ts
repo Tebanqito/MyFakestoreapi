@@ -23,7 +23,7 @@ export const getUserByEmail = async (
 ): Promise<Partial<UserAttributes> | null> => {
   let user: Partial<UserAttributes> | null = {};
   await User.findOne({
-    where: { name: email },
+    where: { email: email },
     attributes: ["id", "password"],
   }).then((data) => {
     user = data?.dataValues as Partial<UserAttributes>;
