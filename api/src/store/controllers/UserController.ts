@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
 import { User, UserAttributes, UserNoPassword } from "../models/user.model";
-import { Product } from "../models/product.model";
 import { getProductById, getProductsByIds } from "./ProductController";
 
 export const createUser = async (
@@ -48,6 +47,22 @@ export const getUserById = async (id: string): Promise<UserNoPassword> => {
   return user;
 };
 
+export const getUserByIdWhitPasswword = async (id: string): Promise<UserAttributes> => {
+  let user: UserAttributes = { id: "", name: "", email: "", password: "", image: "", age: 0, products: [] };
+  await User.findByPk(id).then((data) => data?.dataValues).then((data) => {
+    user = {
+      id: data?.id,
+      name: data?.name,
+      email: data?.email,
+      products: data?.products,
+      age: data?.age,
+      image: data?.image,
+      password: data?.password,
+    } as UserAttributes;
+  });
+  return user;
+};
+
 // export const updateUserById = async (
 //   id: string,
 //   attibutes: Partial<Omit<UserAttributes, "id">>
@@ -63,10 +78,10 @@ export const getUserById = async (id: string): Promise<UserNoPassword> => {
 //   return user;
 // };
 
-// export const emailValidator = (email: string): boolean => {
-//   const patronEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-//   return patronEmail.test(email);
-// };
+export const emailValidator = (email: string): boolean => {
+  const patronEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  return patronEmail.test(email);
+};
 
 export const linkProduct = async (
   userId: string,
