@@ -1,18 +1,18 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import db from "../../config/database.config";
-import { Product } from "./product.model";
 
 export interface UserAttributes {
   id: string;
   email: string;
   name: string;
   password: string;
-  image: string;
-  age: number;
+  image: string | null;
+  age: number | null;
   products: string[]
 };
-
+export type UserNoPassword = Partial<Omit<UserAttributes, "password">>;
 export interface UserInput extends Optional<UserAttributes, "id"> {};
+
 export class User extends Model<UserAttributes, UserInput> {};
 User.init(
   {
