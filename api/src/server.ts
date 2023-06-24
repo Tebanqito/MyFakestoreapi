@@ -1,4 +1,4 @@
-import db from "./config/database.config";
+import db from "../config/database.config";
 import app from "./app";
 
 db.sync({ force: true }).then(() => {
