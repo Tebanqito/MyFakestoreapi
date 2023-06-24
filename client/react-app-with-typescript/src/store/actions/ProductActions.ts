@@ -41,3 +41,13 @@ export const updateProductById = createAsyncThunk(
     return response.data;
   }
 );
+
+export const deleteProductById = createAsyncThunk(
+  "products/getProductById",
+  async (productId: string) => {
+    const response = await axios.delete(
+      `http://localhost:3001/api/products/delete/${productId}`
+    );
+    return response.data;
+  }
+);
