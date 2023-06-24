@@ -66,17 +66,17 @@ export const getUserByIdWhitPasswword = async (id: string): Promise<UserAttribut
 export const updateUserById = async (
   id: string,
   attibutes: Partial<Omit<UserAttributes, "id">>
-): Promise<UserAttributes | null> => {
+): Promise<UserAttributes> => {
   await User.update(attibutes, { where: { id: id } });
-  const user: UserAttributes | null = await getUserByIdWhitPasswword(id);
+  const user: UserAttributes = await getUserByIdWhitPasswword(id);
   return user;
 };
 
-// export const deleteUserById = async (id: string): Promise<User | null> => {
-//   const user: User | null = await getUserById(id);
-//   await User.destroy({ where: { id: id } });
-//   return user;
-// };
+export const deleteUserById = async (id: string): Promise<UserNoPassword> => {
+  const user: UserNoPassword = await getUserById(id);
+  await User.destroy({ where: { id: id } });
+  return user;
+};
 
 export const emailValidator = (email: string): boolean => {
   const patronEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
