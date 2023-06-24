@@ -36,8 +36,9 @@ authRouter.post("/userRegister", async (req: Request, res: Response) => {
       products: [],
     };
     const user: User = await createUser(userToCreate);
+    if (!user) return res.status(400).json(false);
 
-    res.status(200).json({ userCreated: user.dataValues.id });
+    res.status(200).json(true);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Fallo al registrar el usuario." });
