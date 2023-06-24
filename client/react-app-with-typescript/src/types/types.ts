@@ -21,3 +21,8 @@ export interface Product {
   price: number;
   category: CategoryProduct;
 }
+
+export interface UserLogin {
+  userName: string;
+  password: string;
+};
