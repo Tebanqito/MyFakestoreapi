@@ -4,7 +4,7 @@ import {
   getAllUsers,
   getUserById,
   updateUserById,
-  // deleteUserById,
+  deleteUserById,
   linkProduct
 } from "../controllers/UserController";
 import { User, UserNoPassword } from "../models/user.model";
@@ -91,21 +91,21 @@ userRouter.put("/update/:id", async (req: Request, res: Response) => {
   }
 });
 
-// userRouter.delete("/delete/:id", async (req: Request, res: Response) => {
-//   const id: string = req.params.id;
+userRouter.delete("/delete/:id", async (req: Request, res: Response) => {
+  const id: string = req.params.id;
 
-//   try {
-//     const user = await deleteUserById(id);
-//     if (!user)
-//       throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
+  try {
+    const user = await deleteUserById(id);
+    if (!user)
+      throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
 
-//     res.status(200).json(user);
-//   } catch (error) {
-//     console.error(error);
-//     res
-//       .status(400)
-//       .json({ error: "error al eliminar un usuario.", route: "/delete/:id" });
-//   }
-// });
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(400)
+      .json({ error: "error al eliminar un usuario.", route: "/delete/:id" });
+  }
+});
 
 export default userRouter;
