@@ -18,50 +18,74 @@ export const getAllUsers = async (): Promise<User[]> => {
   return users;
 };
 
-export const getUserByEmail = async (email: string): Promise<User | null> => {
-  const user: User | null = await User.findOne({
-    where: { email: email },
-    attributes: ["id", "email", "name", "image"],
+export const getUserByEmail = async (
+  email: string
+): Promise<UserNoPassword | null> => {
+  let user: UserNoPassword | null = {};
+  await User.findOne({
+    where: { name: email },
+    attributes: ["id", "email", "name", "image", "age", "products"],
+  }).then((data) => {
+    user = data?.dataValues as UserNoPassword;
   });
   return user;
 };
 
-export const getUserByName = async (name: string): Promise<User | null> => {
-  const user: User | null = await User.findOne({
+export const getUserByName = async (
+  name: string
+): Promise<UserNoPassword | null> => {
+  let user: UserNoPassword | null = {};
+  await User.findOne({
     where: { name: name },
-    attributes: ["id", "email", "name", "image"],
+    attributes: ["id", "email", "name", "image", "age", "products"],
+  }).then((data) => {
+    user = data?.dataValues as UserNoPassword;
   });
   return user;
 };
 
 export const getUserById = async (id: string): Promise<UserNoPassword> => {
   let user: UserNoPassword = {};
-  await User.findByPk(id).then((data) => data?.dataValues).then((data) => {
-    user = {
-      id: data?.id,
-      name: data?.name,
-      email: data?.email,
-      products: data?.products,
-      image: data?.image,
-      age: data?.age,
-    } as UserNoPassword;
-  });
+  await User.findByPk(id)
+    .then((data) => data?.dataValues)
+    .then((data) => {
+      user = {
+        id: data?.id,
+        name: data?.name,
+        email: data?.email,
+        products: data?.products,
+        image: data?.image,
+        age: data?.age,
+      } as UserNoPassword;
+    });
   return user;
 };
 
-export const getUserByIdWhitPasswword = async (id: string): Promise<UserAttributes> => {
-  let user: UserAttributes = { id: "", name: "", email: "", password: "", image: "", age: 0, products: [] };
-  await User.findByPk(id).then((data) => data?.dataValues).then((data) => {
-    user = {
-      id: data?.id,
-      name: data?.name,
-      email: data?.email,
-      products: data?.products,
-      age: data?.age,
-      image: data?.image,
-      password: data?.password,
-    } as UserAttributes;
-  });
+export const getUserByIdWhitPasswword = async (
+  id: string
+): Promise<UserAttributes> => {
+  let user: UserAttributes = {
+    id: "",
+    name: "",
+    email: "",
+    password: "",
+    image: "",
+    age: 0,
+    products: [],
+  };
+  await User.findByPk(id)
+    .then((data) => data?.dataValues)
+    .then((data) => {
+      user = {
+        id: data?.id,
+        name: data?.name,
+        email: data?.email,
+        products: data?.products,
+        age: data?.age,
+        image: data?.image,
+        password: data?.password,
+      } as UserAttributes;
+    });
   return user;
 };
 
@@ -90,7 +114,10 @@ export const linkProduct = async (
   productId: string
 ): Promise<UserNoPassword> => {
   const user: UserNoPassword = await getUserById(userId);
-  await User.update({ products: [...user.products as string[], productId] }, { where: { id: userId } });
+  await User.update(
+    { products: [...(user.products as string[]), productId] },
+    { where: { id: userId } }
+  );
   const userUpdated: UserNoPassword = await getUserById(userId);
   return userUpdated;
 };
@@ -100,7 +127,9 @@ export const unlinkProduct = async (
   productId: string
 ): Promise<UserNoPassword> => {
   const user: UserNoPassword = await getUserById(userId);
-  const newProducts: string[] | undefined = user.products?.filter((p) => p !== productId);
+  const newProducts: string[] | undefined = user.products?.filter(
+    (p) => p !== productId
+  );
   await updateUserById(userId, { products: newProducts });
   const userWithoutProduct: UserNoPassword = await getUserById(userId);
   return userWithoutProduct;
