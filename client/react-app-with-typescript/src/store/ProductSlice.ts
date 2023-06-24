@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from '../store';
-import { Product } from '../types';
-import axios from "axios";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { Product } from "../types/types";
+import { RootState } from "../store";
+import { fetchProducts } from "./actions/ProductActions";
 
 interface ProductState {
   products: Product[];
@@ -9,17 +9,8 @@ interface ProductState {
   error: string | null;
 }
 
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-  try {
-    const response = await axios.get(`http://localhost:3001/api/products`);
-    return response.data;
-  } catch (error) {
-    throw new Error(`Error: ${error}`);
-  }
-});
-
 const productSlice = createSlice({
-  name: 'products',
+  name: "products",
   initialState: { products: [], loading: false, error: null } as ProductState,
   reducers: {},
   extraReducers: (builder) => {
@@ -34,7 +25,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? 'Error desconocido';
+        state.error = action.error.message ?? "Error desconocido";
       });
   },
 });
