@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { User, UserAttributes } from "../models/user.model";
+import { User, UserAttributes, UserNoPassword } from "../models/user.model";
 import { Product } from "../models/product.model";
 import { getProductById, getProductsByIds } from "./ProductController";
 
@@ -34,60 +34,66 @@ export const getUserByName = async (name: string): Promise<User | null> => {
   return user;
 };
 
-export const getUserById = async (id: string): Promise<User | null> => {
-  const user: User | null = await User.findByPk(id, {
-    attributes: ["id", "name", "email", "description", "image", "age"],
-    include: [{ model: Product, attributes: ["title", "price", "category"] }],
+export const getUserById = async (id: string): Promise<UserNoPassword> => {
+  let user: UserNoPassword = {};
+  await User.findByPk(id).then((data) => data?.dataValues).then((data) => {
+    user = {
+      id: data?.id,
+      name: data?.name,
+      email: data?.email,
+      products: data?.products,
+      image: data?.image,
+    } as UserNoPassword;
   });
   return user;
 };
 
-export const updateUserById = async (
-  id: string,
-  attibutes: Partial<Omit<UserAttributes, "id">>
-): Promise<User | null> => {
-  await User.update(attibutes, { where: { id: id } });
-  const user: User | null = await getUserById(id);
-  return user;
-};
+// export const updateUserById = async (
+//   id: string,
+//   attibutes: Partial<Omit<UserAttributes, "id">>
+// ): Promise<User | null> => {
+//   await User.update(attibutes, { where: { id: id } });
+//   const user: User | null = await getUserById(id);
+//   return user;
+// };
 
-export const deleteUserById = async (id: string): Promise<User | null> => {
-  const user: User | null = await getUserById(id);
-  await User.destroy({ where: { id: id } });
-  return user;
-};
+// export const deleteUserById = async (id: string): Promise<User | null> => {
+//   const user: User | null = await getUserById(id);
+//   await User.destroy({ where: { id: id } });
+//   return user;
+// };
 
-export const emailValidator = (email: string): boolean => {
-  const patronEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-  return patronEmail.test(email);
-};
+// export const emailValidator = (email: string): boolean => {
+//   const patronEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+//   return patronEmail.test(email);
+// };
 
 export const linkProduct = async (
   userId: string,
   productId: string
-): Promise<User | null> => {
-  const user: User | null = await getUserById(userId);
-  user?.dataValues.products.push(productId);
-  await updateUserById(userId, { products: user?.dataValues.products });
-  return user;
+): Promise<UserNoPassword> => {
+  const user: UserNoPassword = await getUserById(userId);
+  await User.update({ products: [...user.products as string[], productId] }, { where: { id: userId } });
+  const userUpdated: UserNoPassword = await getUserById(userId);
+  return userUpdated;
 };
 
-export const unlinkProduct = async (
-  userId: string,
-  productId: string
-): Promise<Product | null> => {
-  const user: User | null = await getUserById(userId);
-  const newProducts: string[] = user?.dataValues.products.filter(
-    (p) => p !== productId
-  ) as string[];
-  await updateUserById(userId, { products: newProducts });
-  const product: Product | null = await getProductById(productId);
-  return product;
-};
+// export const unlinkProduct = async (
+//   userId: string,
+//   productId: string
+// ): Promise<Product | null> => {
+//   const user: User | null = await getUserById(userId);
+//   const newProducts: string[] = user?.dataValues.products.filter(
+//     (p) => p !== productId
+//   ) as string[];
+//   await updateUserById(userId, { products: newProducts });
+//   const product: Product | null = await getProductById(productId);
+//   return product;
+// };
 
-export const getOwnProducts = async (userId: string): Promise<Product[]> => {
-  const user: User | null = await getUserById(userId);
-  const productsIds: string[] = user?.dataValues.products as string[];
-  const products: Product[] = await getProductsByIds(productsIds);
-  return products;
-};
+// export const getOwnProducts = async (userId: string): Promise<Product[]> => {
+//   const user: User | null = await getUserById(userId);
+//   const productsIds: string[] = user?.dataValues.products as string[];
+//   const products: Product[] = await getProductsByIds(productsIds);
+//   return products;
+// };
