@@ -4,6 +4,7 @@ import { User } from "../types/types";
 import {
   fetchUsers,
   createUser,
+  getUserById,
   updateUser,
   deleteUser,
   linkProduct,
@@ -40,6 +41,19 @@ const usersSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Error desconocido";
+      })
+      .addCase(getUserById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserById.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getUserById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Error desconocido";
       })
