@@ -5,9 +5,11 @@ import {
   getProductById,
   updateProductById,
   deleteProductById,
+  getOwnUser,
 } from "../controllers/ProductController";
 import { ProductAttributes } from "../models/product.model";
 import axios from "axios";
+import { UserNoPassword } from "../models/user.model";
 
 const productRouter = Router();
 
@@ -33,6 +35,25 @@ productRouter.get("/", async (req: Request, res: Response) => {
     res
       .status(400)
       .json({ error: "error al obtener todos los productos.", route: "/" });
+  }
+});
+
+productRouter.get("/getOwnUser/:id", async (req: Request, res: Response) => {
+  const id: string = req.params.id;
+
+  try {
+    const user: UserNoPassword | null = await getOwnUser(id);
+    if (!user) throw new Error();
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(400)
+      .json({
+        error: "error al obtener el usuario del producto.",
+        route: "/:id",
+      });
   }
 });
 
@@ -71,12 +92,10 @@ productRouter.put("/update/:id", async (req: Request, res: Response) => {
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
-    res
-      .status(400)
-      .json({
-        error: "error al actualizar un producto.",
-        route: "/update/:id",
-      });
+    res.status(400).json({
+      error: "error al actualizar un producto.",
+      route: "/update/:id",
+    });
   }
 });
 
