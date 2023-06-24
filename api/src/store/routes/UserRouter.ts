@@ -7,6 +7,7 @@ import {
   deleteUserById,
   linkProduct,
   unlinkProduct,
+  getOwnProducts,
 } from "../controllers/UserController";
 import { User, UserNoPassword } from "../models/user.model";
 import { Product } from "../models/product.model";
@@ -22,6 +23,24 @@ userRouter.get("/", async (req: Request, res: Response) => {
     res
       .status(400)
       .json({ error: "error al obtener todos los usuarios.", route: "/" });
+  }
+});
+
+userRouter.get("/productsByUser/:id", async (req: Request, res: Response) => {
+  const id: string = req.params.id;
+
+  try {
+    const products: Product[] = await getOwnProducts(id);
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(400)
+      .json({
+        error: "error al obtener todos los productos de usuario.",
+        route: "/productByUser/:id",
+      });
   }
 });
 
@@ -52,7 +71,9 @@ userRouter.post("/", async (req: Request, res: Response) => {
     const user: User = await createUser(userToCreate);
     if (!user) throw new Error();
 
-    res.status(200).json({ success: `Usuario ${user.dataValues.id} creado con exito.` });
+    res
+      .status(200)
+      .json({ success: `Usuario ${user.dataValues.id} creado con exito.` });
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: "error al crear un producto.", route: "/" });
@@ -65,12 +86,14 @@ userRouter.post("/linkProduct/:id", async (req: Request, res: Response) => {
 
   try {
     const user: UserNoPassword = await linkProduct(userId, productId);
-    if(!user) throw new Error();
+    if (!user) throw new Error();
 
     res.status(200).json(user);
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: "error al comprar un producto.", route: "/" });
+    res
+      .status(400)
+      .json({ error: "error al comprar un producto.", route: "/" });
   }
 });
 
@@ -80,12 +103,14 @@ userRouter.post("/unlinkProduct/:id", async (req: Request, res: Response) => {
 
   try {
     const product: Product | null = await unlinkProduct(userId, productId);
-    if(!product) throw new Error();
+    if (!product) throw new Error();
 
     res.status(200).json(product);
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: "error al comprar un producto.", route: "/" });
+    res
+      .status(400)
+      .json({ error: "error al comprar un producto.", route: "/" });
   }
 });
 
@@ -98,7 +123,7 @@ userRouter.put("/update/:id", async (req: Request, res: Response) => {
     if (!user)
       throw new Error(`El usuario con el id ${id} no se encuentra en la BDD.`);
 
-    res.status(200).json({ update: `Usuario ${user.email} actualizado.`});
+    res.status(200).json({ update: `Usuario ${user.email} actualizado.` });
   } catch (error) {
     console.error(error);
     res.status(400).json({
