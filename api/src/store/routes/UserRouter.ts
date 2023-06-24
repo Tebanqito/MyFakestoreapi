@@ -5,9 +5,11 @@ import {
   getUserById,
   updateUserById,
   deleteUserById,
-  linkProduct
+  linkProduct,
+  unlinkProduct,
 } from "../controllers/UserController";
 import { User, UserNoPassword } from "../models/user.model";
+import { Product } from "../models/product.model";
 
 const userRouter = Router();
 
@@ -66,6 +68,21 @@ userRouter.post("/linkProduct/:id", async (req: Request, res: Response) => {
     if(!user) throw new Error();
 
     res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: "error al comprar un producto.", route: "/" });
+  }
+});
+
+userRouter.post("/unlinkProduct/:id", async (req: Request, res: Response) => {
+  const userId: string = req.body.userId;
+  const productId: string = req.params.id;
+
+  try {
+    const product: Product | null = await unlinkProduct(userId, productId);
+    if(!product) throw new Error();
+
+    res.status(200).json(product);
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: "error al comprar un producto.", route: "/" });
