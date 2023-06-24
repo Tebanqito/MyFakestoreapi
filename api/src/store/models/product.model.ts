@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import db from "../../config/database.config";
+import db from "../../../config/database.config";
 
 type CategoryProduct =
   | "electronics"
