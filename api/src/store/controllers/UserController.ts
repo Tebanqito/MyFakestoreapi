@@ -43,6 +43,7 @@ export const getUserById = async (id: string): Promise<UserNoPassword> => {
       email: data?.email,
       products: data?.products,
       image: data?.image,
+      age: data?.age,
     } as UserNoPassword;
   });
   return user;
