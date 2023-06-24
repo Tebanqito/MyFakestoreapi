@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { UserAttributes, User } from "../models/user.model";
+import { User, UserAttributes } from "../models/user.model";
 import {
   createUser,
   getUserByEmail,
@@ -16,17 +16,16 @@ authRouter.post("/userRegister", async (req: Request, res: Response) => {
   const image: string | null = req.body.image;
   const age: number | null = req.body.age;
   const password: string = req.body.password;
-
   try {
-    const userByEmail = await getUserByEmail(email);
+    const userByEmail: Partial<UserAttributes> | null = await getUserByEmail(email);
     if (userByEmail)
       throw new Error(`Ya existe un usuario con el email ${email}.`);
 
-    const userByName = await getUserByName(name);
+    const userByName: Partial<UserAttributes> | null = await getUserByName(name);
     if (userByName)
       throw new Error(`Ya existe un usuario con el nombre ${name}.`);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword: string = await bcrypt.hash(password, 10);
     const userToCreate: Omit<UserAttributes, "id"> = {
       name,
       password: hashedPassword,
@@ -35,7 +34,7 @@ authRouter.post("/userRegister", async (req: Request, res: Response) => {
       age,
       products: [],
     };
-    const user = await createUser(userToCreate);
+    const user: User = await createUser(userToCreate);
 
     res.status(200).json({ userCreated: user.dataValues.id });
   } catch (error) {
@@ -49,7 +48,7 @@ authRouter.post("/userLogin", async (req: Request, res: Response) => {
   const userName: string = req.body.userName;
 
   try {
-    let user: Partial<User> | null;
+    let user: Partial<UserAttributes> | null;
 
     if (emailValidator(userName)) {
       user = await getUserByEmail(userName);
@@ -61,9 +60,9 @@ authRouter.post("/userLogin", async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Usuario no encontrado." });
     }
 
-    const isPasswordValid = await bcrypt.compare(
+    const isPasswordValid: boolean = await bcrypt.compare(
       password,
-      user.dataValues?.password as string
+      user.password as string
     );
 
     if (!isPasswordValid) {
@@ -72,7 +71,7 @@ authRouter.post("/userLogin", async (req: Request, res: Response) => {
 
     res
       .status(200)
-      .json({ message: "Login exitoso.", userId: user.dataValues?.id });
+      .json({ message: "Login exitoso.", userId: user.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Fallo al logear." });
