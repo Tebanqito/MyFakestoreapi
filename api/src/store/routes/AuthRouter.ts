@@ -66,12 +66,12 @@ authRouter.post("/userLogin", async (req: Request, res: Response) => {
     );
 
     if (!isPasswordValid) {
-      return res.status(401).json({ error: "Contraseña invalida." });
+      return res.status(400).json({ login: false });
     }
 
     res
       .status(200)
-      .json({ message: "Login exitoso.", userId: user.id });
+      .json({ login: true, userId: user.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Fallo al logear." });
