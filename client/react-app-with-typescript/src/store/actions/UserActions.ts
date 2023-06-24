@@ -42,8 +42,19 @@ export const deleteUser = createAsyncThunk(
 export const linkProduct = createAsyncThunk(
   "users/addProduct",
   async (data: { productId: string; userId: string }) => {
-    const response = await axios.post(
+    const response = await axios.put(
       `http://localhost:3001/api/users/linkProduct/${data.productId}`,
+      { id: data.userId }
+    );
+    return response.data;
+  }
+);
+
+export const unlinkProduct = createAsyncThunk(
+  "users/removeProduct",
+  async (data: { productId: string; userId: string }) => {
+    const response = await axios.put(
+      `http://localhost:3001/api/users/unlinkProduct/${data.productId}`,
       { id: data.userId }
     );
     return response.data;
