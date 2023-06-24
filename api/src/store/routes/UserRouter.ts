@@ -110,7 +110,7 @@ userRouter.put("/unlinkProduct/:id", async (req: Request, res: Response) => {
     console.error(error);
     res
       .status(400)
-      .json({ error: "error al comprar un producto.", route: "/" });
+      .json({ error: "error al remover un producto.", route: "/" });
   }
 });
 
