@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import { User, UserAttributes } from "../models/user.model";
+import { User, UserAttributes, UserNoPassword } from "../models/user.model";
 import {
   createUser,
   getUserByEmail,
   getUserByName,
+  getUserById,
   emailValidator,
 } from "../controllers/UserController";
 
@@ -69,9 +70,11 @@ authRouter.post("/userLogin", async (req: Request, res: Response) => {
       return res.status(400).json({ login: false });
     }
 
+    const userToLogin: UserNoPassword = await getUserById(user.id as string);
+
     res
       .status(200)
-      .json({ login: true, userId: user.id });
+      .json(userToLogin);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Fallo al logear." });
