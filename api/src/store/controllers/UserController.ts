@@ -105,9 +105,9 @@ export const unlinkProduct = async (
   return product;
 };
 
-// export const getOwnProducts = async (userId: string): Promise<Product[]> => {
-//   const user: User | null = await getUserById(userId);
-//   const productsIds: string[] = user?.dataValues.products as string[];
-//   const products: Product[] = await getProductsByIds(productsIds);
-//   return products;
-// };
+export const getOwnProducts = async (userId: string): Promise<Product[]> => {
+  const user: UserNoPassword = await getUserById(userId);
+  const productsIds: string[] = user.products as string[];
+  const products: Product[] = await getProductsByIds(productsIds);
+  return products;
+};
