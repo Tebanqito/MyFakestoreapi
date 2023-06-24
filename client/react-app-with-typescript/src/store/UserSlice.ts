@@ -7,6 +7,7 @@ import {
   updateUser,
   deleteUser,
   linkProduct,
+  unlinkProduct,
 } from "./actions/UserActions";
 
 interface UsersState {
@@ -91,6 +92,19 @@ const usersSlice = createSlice({
         state.error = null;
       })
       .addCase(linkProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Error desconocido";
+      })
+      .addCase(unlinkProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(unlinkProduct.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(unlinkProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Error desconocido";
       });
