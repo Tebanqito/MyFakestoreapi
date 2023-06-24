@@ -98,12 +98,12 @@ export const linkProduct = async (
 export const unlinkProduct = async (
   userId: string,
   productId: string
-): Promise<Product | null> => {
+): Promise<UserNoPassword> => {
   const user: UserNoPassword = await getUserById(userId);
   const newProducts: string[] | undefined = user.products?.filter((p) => p !== productId);
   await updateUserById(userId, { products: newProducts });
-  const product: Product | null = await getProductById(productId);
-  return product;
+  const userWithoutProduct: UserNoPassword = await getUserById(userId);
+  return userWithoutProduct;
 };
 
 export const getOwnProducts = async (userId: string): Promise<Product[]> => {

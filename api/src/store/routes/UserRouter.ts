@@ -80,7 +80,7 @@ userRouter.post("/", async (req: Request, res: Response) => {
   }
 });
 
-userRouter.post("/linkProduct/:id", async (req: Request, res: Response) => {
+userRouter.put("/linkProduct/:id", async (req: Request, res: Response) => {
   const userId: string = req.body.userId;
   const productId: string = req.params.id;
 
@@ -97,7 +97,7 @@ userRouter.post("/linkProduct/:id", async (req: Request, res: Response) => {
   }
 });
 
-userRouter.post("/unlinkProduct/:id", async (req: Request, res: Response) => {
+userRouter.put("/unlinkProduct/:id", async (req: Request, res: Response) => {
   const userId: string = req.body.userId;
   const productId: string = req.params.id;
 
