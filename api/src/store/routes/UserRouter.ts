@@ -102,10 +102,10 @@ userRouter.put("/unlinkProduct/:id", async (req: Request, res: Response) => {
   const productId: string = req.params.id;
 
   try {
-    const product: Product | null = await unlinkProduct(userId, productId);
-    if (!product) throw new Error();
+    const user: UserNoPassword = await unlinkProduct(userId, productId);
+    if (!user) throw new Error();
 
-    res.status(200).json(product);
+    res.status(200).json(user);
   } catch (error) {
     console.error(error);
     res
