@@ -7,6 +7,7 @@ import {
   createProduct,
   updateProductById,
   deleteProductById,
+  getOwnUser,
 } from "./actions/ProductActions";
 
 interface ProductState {
@@ -19,7 +20,13 @@ interface ProductState {
 
 const productSlice = createSlice({
   name: "products",
-  initialState: { products: [], loading: false, error: null, ownUser: {}, product: {} } as ProductState,
+  initialState: {
+    products: [],
+    loading: false,
+    error: null,
+    ownUser: {},
+    product: {},
+  } as ProductState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -80,6 +87,18 @@ const productSlice = createSlice({
         state.product = action.payload;
       })
       .addCase(deleteProductById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Error desconocido";
+      })
+      .addCase(getOwnUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOwnUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.ownUser = action.payload;
+      })
+      .addCase(getOwnUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Error desconocido";
       });
