@@ -1,11 +1,17 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { User } from "../types";
+import { User } from "../types/types";
+import {
+  fetchUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+  linkProduct,
+} from "./actions/UserActions";
 
 interface UsersState {
-  user: User | null;
-  users: User[];
+  user: Partial<User> | null;
+  users: Partial<User>[];
   loading: boolean;
   error: string | null;
 }
@@ -16,43 +22,6 @@ const initialState: UsersState = {
   loading: false,
   error: null,
 };
-
-export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const response = await axios.get(`http://localhost:3001/api/users`);
-  return response.data;
-});
-
-export const createUser = createAsyncThunk(
-  "users/createUser",
-  async (userData: Omit<User, "id">) => {
-    const response = await axios.post(
-      `http://localhost:3001/api/users`,
-      userData
-    );
-    return response.data;
-  }
-);
-
-export const updateUser = createAsyncThunk(
-  "users/updateUser",
-  async (userData: { attributes: Partial<Omit<User, "id">>; id: string }) => {
-    const response = await axios.put(
-      `http://localhost:3001/api/users/update/${userData.id}`,
-      userData.attributes
-    );
-    return response.data;
-  }
-);
-
-export const deleteUser = createAsyncThunk(
-  "users/deleteUser",
-  async (id: string) => {
-    const response = await axios.delete(
-      `http://localhost:3001/api/users/delete/${id}`
-    );
-    return response.data;
-  }
-);
 
 const usersSlice = createSlice({
   name: "users",
@@ -109,6 +78,19 @@ const usersSlice = createSlice({
         state.error = null;
       })
       .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Error desconocido";
+      })
+      .addCase(linkProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(linkProduct.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(linkProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Error desconocido";
       });
