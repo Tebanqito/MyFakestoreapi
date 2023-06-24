@@ -4,6 +4,7 @@ export interface User {
   email: string;
   image: string;
   age: number;
+  password: string;
   products: string[];
 }
 
