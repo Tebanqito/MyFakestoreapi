@@ -20,26 +20,26 @@ export const getAllUsers = async (): Promise<User[]> => {
 
 export const getUserByEmail = async (
   email: string
-): Promise<Partial<User> | null> => {
-  let user: Partial<User> | null = {};
+): Promise<Partial<UserAttributes> | null> => {
+  let user: Partial<UserAttributes> | null = {};
   await User.findOne({
     where: { name: email },
     attributes: ["id", "password"],
   }).then((data) => {
-    user = data?.dataValues as Partial<User>;
+    user = data?.dataValues as Partial<UserAttributes>;
   });
   return user;
 };
 
 export const getUserByName = async (
   name: string
-): Promise<Partial<User> | null> => {
-  let user: Partial<User> | null = {};
+): Promise<Partial<UserAttributes> | null> => {
+  let user: Partial<UserAttributes> | null = {};
   await User.findOne({
     where: { name: name },
     attributes: ["id", "password"],
   }).then((data) => {
-    user = data?.dataValues as Partial<User>;
+    user = data?.dataValues as Partial<UserAttributes>;
   });
   return user;
 };
