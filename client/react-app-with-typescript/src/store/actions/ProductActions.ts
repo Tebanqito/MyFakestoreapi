@@ -11,3 +11,8 @@ export const getProductById = createAsyncThunk("products/getProductById", async 
     const response = await axios.get(`http://localhost:3001/api/products/${productId}`);
     return response.data;
 });
+
+export const createProduct = createAsyncThunk("products/getProductById", async (productData: Product) => {
+    const response = await axios.post(`http://localhost:3001/api/products`, productData);
+    return response.data;
+});
