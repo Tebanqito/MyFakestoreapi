@@ -18,6 +18,16 @@ export const createUser = createAsyncThunk(
   }
 );
 
+export const getUserById = createAsyncThunk(
+  "users/getUserById",
+  async (userId: string) => {
+    const response = await axios.get(
+      `http://localhost:3001/api/users/${userId}`
+    );
+    return response.data;
+  }
+);
+
 export const updateUser = createAsyncThunk(
   "users/updateUser",
   async (userData: { attributes: Partial<Omit<User, "id">>; id: string }) => {
