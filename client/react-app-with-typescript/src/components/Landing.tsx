@@ -14,6 +14,7 @@ const Landing: React.FC = () => {
         <div className="App">
             {isAuthenticated ? <Home user={user} /> :
                 <div>
+                    <h1>Bienvenido a MyFakeapistore</h1>
                     <button onClick={() => setIsRegister(!isRegister)}>
                         {!isRegister ? "Iniciar Sesion" : "Registrarse"}
                     </button>
