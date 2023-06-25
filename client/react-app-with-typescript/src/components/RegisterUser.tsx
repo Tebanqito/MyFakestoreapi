@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../store/actions/AuthActions';
 import { AppDispatch } from '../store';
+import { RootState } from '../store';
 
 const RegisterUser: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -13,7 +14,8 @@ const RegisterUser: React.FC = () => {
 
     const handleRegister = (): void => {
         if (!name.length || !email.length || !password.length) return alert("Datos incompletos.");
-        dispatch(registerUser({ name, image, age, email, password }));
+        dispatch(registerUser({ name, image, age, email, password }))
+            .then(() => alert("Usuario registrado correctamente."));
     };
 
     return (
