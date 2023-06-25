@@ -8,7 +8,6 @@ const RegisterUser: React.FC = () => {
     const [name, setName] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [image, setImage] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
     const [age, setAge] = useState<number>(0);
     const [email, setEmail] = useState<string>("");
 
@@ -29,12 +28,6 @@ const RegisterUser: React.FC = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
             />
             <input
                 type="text"
