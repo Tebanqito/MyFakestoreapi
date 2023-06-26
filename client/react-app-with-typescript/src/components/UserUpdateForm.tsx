@@ -11,7 +11,6 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({ userId }) => {
     const dispatch = useDispatch<AppDispatch>();
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
-    const [description, setDescription] = useState('');
     const [image, setImage] = useState('');
 
     const handleFormSubmit = (e: React.FormEvent) => {
@@ -22,7 +21,6 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({ userId }) => {
             attributes: {
                 ...(name && { name }),
                 ...(age && { age: parseFloat(age) }),
-                ...(description && { description }),
                 ...(image && { image }),
             },
         };
@@ -39,10 +37,6 @@ const UserUpdateForm: React.FC<UserUpdateFormProps> = ({ userId }) => {
             <label>
                 Age:
                 <input type="number" value={age} onChange={(e) => setAge(e.target.value)} />
-            </label>
-            <label>
-                Description:
-                <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
             </label>
             <label>
                 Image:
