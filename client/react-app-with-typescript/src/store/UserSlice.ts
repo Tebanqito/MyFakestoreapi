@@ -9,9 +9,12 @@ import {
   deleteUser,
   linkProduct,
   unlinkProduct,
+  registerUser,
+  loginUser,
 } from "./actions/UserActions";
 
 interface UsersState {
+  isAuthenticated: boolean;
   user: Partial<User> | null;
   users: Partial<User>[];
   loading: boolean;
@@ -19,6 +22,7 @@ interface UsersState {
 }
 
 const initialState: UsersState = {
+  isAuthenticated: false,
   user: null,
   users: [],
   loading: false,
@@ -28,7 +32,13 @@ const initialState: UsersState = {
 const usersSlice = createSlice({
   name: "users",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.isAuthenticated = false;
+      state.user = null;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
@@ -122,6 +132,22 @@ const usersSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Error desconocido";
       });
+    builder.addCase(registerUser.fulfilled, (state, action) => {
+      state.error = null;
+    });
+    builder.addCase(registerUser.rejected, (state, action) => {
+      state.error = action.payload as string;
+    });
+    builder.addCase(loginUser.fulfilled, (state, action) => {
+      state.isAuthenticated = true;
+      state.user = action.payload;
+      state.error = null;
+    });
+    builder.addCase(loginUser.rejected, (state, action) => {
+      state.isAuthenticated = false;
+      state.user = null;
+      state.error = action.payload as string;
+    });
   },
 });
 
