@@ -1,4 +1,4 @@
-import { User } from "../../types/types";
+import { User, UserLogin } from "../../types/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -72,10 +72,21 @@ export const unlinkProduct = createAsyncThunk(
 );
 
 export const registerUser = createAsyncThunk(
-  "auth/register",
+  "users/register",
   async (userData: Partial<User>) => {
     const response = await axios.post(
       `http://localhost:3001/api/users/userRegister`,
+      userData
+    );
+    return response.data;
+  }
+);
+
+export const loginUser = createAsyncThunk(
+  "users/login",
+  async (userData: UserLogin) => {
+    const response = await axios.post(
+      `http://localhost:3001/api/auth/userLogin`,
       userData
     );
     return response.data;
