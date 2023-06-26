@@ -11,6 +11,7 @@ import {
   getOwnProducts,
   getUserByEmail,
   getUserByName,
+  emailValidator,
 } from "../controllers/UserController";
 import { User, UserNoPassword, UserAttributes } from "../models/user.model";
 import { Product } from "../models/product.model";
@@ -38,12 +39,10 @@ userRouter.get("/productsByUser/:id", async (req: Request, res: Response) => {
     res.status(200).json(products);
   } catch (error) {
     console.error(error);
-    res
-      .status(400)
-      .json({
-        error: "error al obtener todos los productos de usuario.",
-        route: "/productByUser/:id",
-      });
+    res.status(400).json({
+      error: "error al obtener todos los productos de usuario.",
+      route: "/productByUser/:id",
+    });
   }
 });
 
@@ -83,6 +82,41 @@ userRouter.post("/", async (req: Request, res: Response) => {
   }
 });
 
+userRouter.post("/userLogin", async (req: Request, res: Response) => {
+  const password: string = req.body.password;
+  const userName: string = req.body.userName;
+
+  try {
+    let user: Partial<UserAttributes> | null;
+
+    if (emailValidator(userName)) {
+      user = await getUserByEmail(userName);
+    } else {
+      user = await getUserByName(userName);
+    }
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado." });
+    }
+
+    const isPasswordValid: boolean = await bcrypt.compare(
+      password,
+      user.password as string
+    );
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ login: false });
+    }
+
+    const userToLogin: UserNoPassword = await getUserById(user.id as string);
+
+    res.status(200).json(userToLogin);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Fallo al logear." });
+  }
+});
+
 userRouter.post("/userRegister", async (req: Request, res: Response) => {
   const name: string = req.body.name;
   const email: string = req.body.email;
@@ -90,11 +124,15 @@ userRouter.post("/userRegister", async (req: Request, res: Response) => {
   const age: number | null = req.body.age;
   const password: string = req.body.password;
   try {
-    const userByEmail: Partial<UserAttributes> | null = await getUserByEmail(email);
+    const userByEmail: Partial<UserAttributes> | null = await getUserByEmail(
+      email
+    );
     if (userByEmail)
       throw new Error(`Ya existe un usuario con el email ${email}.`);
 
-    const userByName: Partial<UserAttributes> | null = await getUserByName(name);
+    const userByName: Partial<UserAttributes> | null = await getUserByName(
+      name
+    );
     if (userByName)
       throw new Error(`Ya existe un usuario con el nombre ${name}.`);
 
