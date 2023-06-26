@@ -70,3 +70,14 @@ export const unlinkProduct = createAsyncThunk(
     return response.data;
   }
 );
+
+export const registerUser = createAsyncThunk(
+  "auth/register",
+  async (userData: Partial<User>) => {
+    const response = await axios.post(
+      `http://localhost:3001/api/users/userRegister`,
+      userData
+    );
+    return response.data;
+  }
+);
