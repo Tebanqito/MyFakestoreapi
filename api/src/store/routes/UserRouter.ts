@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import bcrypt from "bcrypt";
 import {
   createUser,
   getAllUsers,
@@ -8,8 +9,10 @@ import {
   linkProduct,
   unlinkProduct,
   getOwnProducts,
+  getUserByEmail,
+  getUserByName,
 } from "../controllers/UserController";
-import { User, UserNoPassword } from "../models/user.model";
+import { User, UserNoPassword, UserAttributes } from "../models/user.model";
 import { Product } from "../models/product.model";
 
 const userRouter = Router();
@@ -77,6 +80,40 @@ userRouter.post("/", async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: "error al crear un producto.", route: "/" });
+  }
+});
+
+userRouter.post("/userRegister", async (req: Request, res: Response) => {
+  const name: string = req.body.name;
+  const email: string = req.body.email;
+  const image: string | null = req.body.image;
+  const age: number | null = req.body.age;
+  const password: string = req.body.password;
+  try {
+    const userByEmail: Partial<UserAttributes> | null = await getUserByEmail(email);
+    if (userByEmail)
+      throw new Error(`Ya existe un usuario con el email ${email}.`);
+
+    const userByName: Partial<UserAttributes> | null = await getUserByName(name);
+    if (userByName)
+      throw new Error(`Ya existe un usuario con el nombre ${name}.`);
+
+    const hashedPassword: string = await bcrypt.hash(password, 10);
+    const userToCreate: Omit<UserAttributes, "id"> = {
+      name,
+      password: hashedPassword,
+      email,
+      image,
+      age,
+      products: [],
+    };
+    const user: User = await createUser(userToCreate);
+    if (!user) return res.status(400).json(false);
+
+    res.status(200).json(true);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Fallo al registrar el usuario." });
   }
 });
 
