@@ -131,26 +131,28 @@ const usersSlice = createSlice({
       .addCase(unlinkProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Error desconocido";
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.isAuthenticated = true;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.isAuthenticated = false;
+        state.user = null;
+        state.error = action.payload as string;
       });
-    builder.addCase(registerUser.fulfilled, (state, action) => {
-      state.error = null;
-    });
-    builder.addCase(registerUser.rejected, (state, action) => {
-      state.error = action.payload as string;
-    });
-    builder.addCase(loginUser.fulfilled, (state, action) => {
-      state.isAuthenticated = true;
-      state.user = action.payload;
-      state.error = null;
-    });
-    builder.addCase(loginUser.rejected, (state, action) => {
-      state.isAuthenticated = false;
-      state.user = null;
-      state.error = action.payload as string;
-    });
   },
 });
 
 export const selectUsers = (state: RootState) => state.users;
+
+export const { logout } = usersSlice.actions;
 
 export default usersSlice.reducer;
